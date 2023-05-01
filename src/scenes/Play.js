@@ -13,6 +13,12 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        if (game.settings.audioPlaying == false) {
+            let backgroundMusic = this.sound.add('background_music');
+            backgroundMusic.loop = true;
+            backgroundMusic.play();
+            game.settings.audioPlaying = true;
+        }
         let shipSpeed = game.settings.spaceshipSpeed;
         // tile sprite background
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
