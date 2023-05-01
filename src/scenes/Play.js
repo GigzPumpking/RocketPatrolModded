@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        //The reason this isn't working is because shipSpeed is initialized once and does not change its values ever again, even if updated
+        //Mid speed change doesn't work because shipSpeed is initialized once and does not change its values ever again, even if updated
 
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30, shipSpeed).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20, shipSpeed).setOrigin(0, 0);
@@ -64,10 +64,6 @@ class Play extends Phaser.Scene {
 
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(game.settings.gameTimer/2, () => {
-            shipSpeed *= 5;
-            console.log("Increase speed");
-        }, null, this);
 
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
@@ -129,7 +125,8 @@ class Play extends Phaser.Scene {
         });
         // score add and repaint
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score;       
-        this.sound.play('sfx_explosion');
+        this.scoreLeft.text = this.p1Score;
+        let randSfx = Math.floor(Math.random() * 4 + 1);
+        this.sound.play('sfx_explosion'+randSfx);
     }
 }
