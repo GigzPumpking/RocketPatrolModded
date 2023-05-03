@@ -42,10 +42,10 @@ class Play extends Phaser.Scene {
 
         //Mid speed change doesn't work because shipSpeed is initialized once and does not change its values ever again, even if updated
 
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship1', 0, 30, shipSpeed+2).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20, shipSpeed).setOrigin(0, 0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10, shipSpeed).setOrigin(0,0);
-        this.ship04 = new Spaceship(this, game.config.width, borderUISize*9 + borderPadding*2, 'spaceship', 0, 50, shipSpeed).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship1', 0, 50, shipSpeed+2).setOrigin(0, 0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 30, shipSpeed).setOrigin(0, 0);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 20, shipSpeed).setOrigin(0,0);
+        this.ship04 = new Spaceship(this, game.config.width, borderUISize*9 + borderPadding*2, 'spaceship', 0, 10, shipSpeed).setOrigin(0,0);
 
         this.anims.create({
             key: 'explode',
