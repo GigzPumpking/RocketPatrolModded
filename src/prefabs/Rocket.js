@@ -9,17 +9,22 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.isFiring = false;
         this.moveSpeed = 2;
         this.sfxRocket = scene.sound.add('sfx_rocket');
+
     }
 
     update() {
+        const pointer = game.input.activePointer;
 
         //left && right movement
 
         if (!this.isFiring) {
+            
             if (keyLEFT.isDown && this.x >= borderUISize + this.width) {
                 this.x -= this.moveSpeed;
             } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width) {
                 this.x += this.moveSpeed;
+            } else {
+                this.setPosition(game.input.mousePointer.x, 656);
             }
         }
         else {
@@ -32,10 +37,10 @@ class Rocket extends Phaser.GameObjects.Sprite {
 
         //fire button
 
-        if (Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
+        if ((Phaser.Input.Keyboard.JustDown(keyF) || pointer.isDown) && !this.isFiring) {
             this.isFiring = true;
             this.sfxRocket.play();  // play sfx
-          }
+        }
 
         //if fired, move up
 

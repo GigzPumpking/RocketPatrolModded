@@ -2,13 +2,14 @@ class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
     }
+    timedEvent;
 
     preload() {
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('spaceship1', './assets/spaceship1.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('starfield', './assets/starfield2.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
@@ -21,9 +22,9 @@ class Play extends Phaser.Scene {
         }
         let shipSpeed = game.settings.spaceshipSpeed;
         // tile sprite background
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.starfield = this.add.tileSprite(0, 0, 960, 720, 'starfield').setOrigin(0, -0.1);
         // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize, 0x00FF00).setOrigin(0, 0);
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
@@ -31,7 +32,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
-
+    
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -63,9 +64,9 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding, this.p1Score, scoreConfig);
 
-        this.scoreRight = this.add.text(game.config.width - borderUISize - 10*borderPadding, borderUISize + borderPadding*2, game.settings.highScore, scoreConfig);
+        this.scoreRight = this.add.text(game.config.width - borderUISize - 10*borderPadding, borderUISize + borderPadding, game.settings.highScore, scoreConfig);
         
         // GAME OVER flag
         this.gameOver = false;
@@ -81,14 +82,25 @@ class Play extends Phaser.Scene {
                 game.settings.highScore = this.p1Score;
             }
         }, null, this);
+
+        this.timeLeft = this.add.text(borderUISize + borderPadding + 350, borderUISize + borderPadding, this.clock, scoreConfig);
+
+        this.speedUp = this.time.delayedCall(game.settings.gameTimer/2, () => {
+            this.ship01.increaseSpeed();
+            this.ship02.increaseSpeed();
+            this.ship03.increaseSpeed();
+            this.ship04.increaseSpeed();
+        }, null, this);
     }
 
     update() {
+        this.timeLeft.setText(`Time: ${this.clock.getElapsedSeconds().toString().substring(0, 2)}`);
           // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.game.sound.stopAll();
             this.scene.start("menuScene");
         }
         this.starfield.tilePositionX -= 4;
