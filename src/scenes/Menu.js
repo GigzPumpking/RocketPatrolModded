@@ -63,7 +63,7 @@ class Menu extends Phaser.Scene {
           // hard mode
           game.settings = {
             spaceshipSpeed: 4,
-            gameTimer: 15000,
+            gameTimer: 45000,
             highScore: 0,
             audioPlaying: false
           }

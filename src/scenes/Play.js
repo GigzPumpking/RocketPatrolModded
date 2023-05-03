@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('spaceship1', './assets/spaceship1.png');
         this.load.image('starfield', './assets/starfield2.png');
+        this.load.image('starfield2', './assets/starfield4.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
@@ -23,6 +24,7 @@ class Play extends Phaser.Scene {
         let shipSpeed = game.settings.spaceshipSpeed;
         // tile sprite background
         this.starfield = this.add.tileSprite(0, 0, 960, 720, 'starfield').setOrigin(0, -0.1);
+        this.starfield2 = this.add.tileSprite(0, 0, 960, 720, 'starfield2').setOrigin(0, -0.1);
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize, 0x00FF00).setOrigin(0, 0);
         // white borders
@@ -104,6 +106,7 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
         this.starfield.tilePositionX -= 4;
+        this.starfield2.tilePositionX -= 2;
         this.p1Rocket.update();
         this.ship01.update();               // update spaceships (x3)
         this.ship02.update();
