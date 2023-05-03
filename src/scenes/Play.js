@@ -15,6 +15,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.initialTime = game.settings.gameTimer;
         if (game.settings.audioPlaying == false) {
             let backgroundMusic = this.sound.add('background_music');
             backgroundMusic.loop = true;
@@ -59,16 +60,23 @@ class Play extends Phaser.Scene {
             fontSize: '28px',
             backgroundColor: '#F3B141',
             color: '#843605',
-            align: 'right',
+            align: 'left',
             padding: {
               top: 5,
               bottom: 5,
+              left: 5,
+              right: 5
             },
-            fixedWidth: 100
+            fixedWidth: 200
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding, this.p1Score, scoreConfig);
 
-        this.scoreRight = this.add.text(game.config.width - borderUISize - 10*borderPadding, borderUISize + borderPadding, game.settings.highScore, scoreConfig);
+        const timeConfig = Object.assign({}, scoreConfig, { fixedWidth: 170, align: 'center' });
+
+        const highScoreConfig = Object.assign({}, scoreConfig, { fixedWidth: 240, align: 'right' });
+
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding, 'Score: '+ this.p1Score, scoreConfig);
+
+        this.scoreRight = this.add.text(game.config.width - borderUISize - borderPadding*16, borderUISize + borderPadding, 'High Score: '+ game.settings.highScore, highScoreConfig);
         
         // GAME OVER flag
         this.gameOver = false;
@@ -76,16 +84,18 @@ class Play extends Phaser.Scene {
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
 
-        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+        this.clock = this.time.delayedCall(game.settings.gameTimer*1000, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
             if (game.settings.highScore < this.p1Score) {
-                game.settings.highScore = this.p1Score;
+                game.settings.highScore = 'High Score: '+ this.p1Score;
             }
         }, null, this);
 
-        this.timeLeft = this.add.text(borderUISize + borderPadding + 350, borderUISize + borderPadding, this.clock, scoreConfig);
+        this.timeLeft = this.add.text(borderUISize + borderPadding + 310, borderUISize + borderPadding, 'Timer: ' + this.initialTime, timeConfig);
+
+        this.time.addEvent({ delay: 1000, callback: this.timeDecrease, callbackScope: this, loop: true });
 
         this.speedUp = this.time.delayedCall(game.settings.gameTimer/2, () => {
             this.ship01.increaseSpeed();
@@ -95,8 +105,14 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
 
+    timeDecrease() {
+        if (!this.gameOver) {
+            this.initialTime -= 1;
+            this.timeLeft.setText('Timer: ' + this.initialTime);
+        }
+    }
+
     update() {
-        this.timeLeft.setText(`Time: ${this.clock.getElapsedSeconds().toString().substring(0, 2)}`);
           // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -155,7 +171,7 @@ class Play extends Phaser.Scene {
         });
         // score add and repaint
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score;
+        this.scoreLeft.setText('Score: '+ this.p1Score);
         let randSfx = Math.floor(Math.random() * 4 + 1);
         this.sound.play('sfx_explosion'+randSfx);
     }

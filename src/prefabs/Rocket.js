@@ -9,10 +9,12 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.isFiring = false;
         this.moveSpeed = 2;
         this.sfxRocket = scene.sound.add('sfx_rocket');
+        this.rotation = 0;
 
     }
 
     update() {
+        this.rotation = 0;
         const pointer = game.input.activePointer;
 
         //left && right movement
@@ -30,8 +32,10 @@ class Rocket extends Phaser.GameObjects.Sprite {
         else {
             if (keyLEFT.isDown && this.x >= borderUISize + this.width) {
                 this.x -= this.moveSpeed*2;
+                this.rotation = 3*Math.PI/2;
             } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width) {
                 this.x += this.moveSpeed*2;
+                this.rotation = Math.PI/2;
             }
         }
 

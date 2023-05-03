@@ -52,7 +52,7 @@ class Menu extends Phaser.Scene {
           // easy mode
             game.settings = {
                 spaceshipSpeed: 3,
-                gameTimer: 60000,
+                gameTimer: 60,
                 highScore: 0,
                 audioPlaying: false
             }
@@ -63,7 +63,7 @@ class Menu extends Phaser.Scene {
           // hard mode
           game.settings = {
             spaceshipSpeed: 4,
-            gameTimer: 45000,
+            gameTimer: 45,
             highScore: 0,
             audioPlaying: false
           }
